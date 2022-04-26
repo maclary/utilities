@@ -1,0 +1,58 @@
+{
+    "name": "@maclary/context",
+    "version": "0.1.0",
+    "description": "Convert Discord messages and chat input into a single common object",
+    "author": "ApteryxXYZ",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        "import": "./dist/index.mjs",
+        "require": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+    },
+    "scripts": {
+        "lint": "eslint src --ext .js,.ts src --fix",
+        "format": "prettier --write {src,test}/**/*.ts",
+        "clean": "rm -rf dist",
+        "build": "tsc && gen-esm-wrapper ./dist/index.js ./dist/index.mjs",
+        "watch": "tsc --watch",
+        "postinstall": "rm -rf node_modules"
+    },
+    "files": [
+        "dist",
+        "!dist/*.tsbuildinfo"
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/maclary/utilities#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/maclary/utilities.git",
+        "directory": "packages/context"
+    },
+    "bugs": {
+        "url": "https://github.com/maclary/utilities/issues"
+    },
+    "engines": {
+        "node": ">=16.9.0",
+        "npm": ">=7.0.0"
+    },
+    "keywords": [
+        "discord",
+        "discord.js",
+        "context",
+        "message",
+        "prefix-commands",
+        "interaction",
+        "application-commands",
+        "slash-commands",
+        "maclary"
+    ],
+    "peerDependencies": {
+        "discord-api-types": "*",
+        "discord.js": "dev"
+    },
+    "devDependencies": {
+        "eslint": "^8.14.0",
+        "prettier": "^2.6.2"
+    }
+}

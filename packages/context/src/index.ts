@@ -989,7 +989,7 @@ export class Context {
             throw new Error('This context has already been replied to.');
 
         if (this.parent instanceof Message) return this[_reply](options as any);
-        return this.parent.followUp(options as any);
+        return this.parent.reply(options as any);
     }
 
     /**

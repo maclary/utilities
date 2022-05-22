@@ -49,7 +49,7 @@
     ],
     "peerDependencies": {
         "discord-api-types": "*",
-        "discord.js": "dev"
+        "discord.js": "*"
     },
     "devDependencies": {
         "eslint": "^8.14.0",

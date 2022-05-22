@@ -328,7 +328,8 @@ __metadata:
     eslint: ^8.14.0
     prettier: ^2.6.2
   peerDependencies:
-    discord.js: dev
+    discord-api-types: "*"
+    discord.js: "*"
   languageName: unknown
   linkType: soft
 

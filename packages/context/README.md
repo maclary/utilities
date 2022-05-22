@@ -47,7 +47,7 @@ client.on('interactionCreate', async (interaction) => {
     return sharedRun(context);
 });
 
-async unction sharedRun(context) {
+async function sharedRun(context) {
     await context.deferReply();
     // interaction: `interaction.deferReply()`
     // message: `message.channel.sendTyping()`
@@ -68,5 +68,4 @@ async unction sharedRun(context) {
     // interaction: `interaction.deleteReply()`
     // message: `reply.delete()`
 }
-
 ```

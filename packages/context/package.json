@@ -1,6 +1,6 @@
 {
     "name": "@maclary/context",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "Convert Discord messages and chat input into a single common object",
     "author": "ApteryxXYZ",
     "main": "dist/index.js",

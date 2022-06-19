@@ -1,5 +1,8 @@
-import type { ModalBuilder } from '@discordjs/builders';
-import type { APIGuildMember, APIMessage } from 'discord-api-types/v10';
+import type {
+    APIGuildMember,
+    APIMessage,
+    APIModalInteractionResponseCallbackData,
+} from 'discord-api-types/v10';
 import {
     ActionRow,
     ApplicationCommand,
@@ -27,6 +30,7 @@ import {
     InteractionResponse,
     InteractionType,
     InteractionWebhook,
+    JSONEncodable,
     Locale,
     Message,
     MessageActionRowComponent,
@@ -41,7 +45,7 @@ import {
     MessageReaction,
     MessageReference,
     MessageType,
-    ModalData,
+    ModalComponentData,
     ModalSubmitInteraction,
     NewsChannel,
     PermissionsBitField,
@@ -627,11 +631,11 @@ export class Context {
      * @message Creates a message component interaction collector
      * @param {MessageComponentCollectorOptions} [options={}] Options to send to
      * the collector
-     * @returns {Promise<InteractionCollector<MessageComponentInteraction>|null>}
+     * @returns {InteractionCollector<MessageComponentInteraction>|null}
      */
-    public async createMessageComponentCollector(
+    public createMessageComponentCollector(
         options: MessageComponentCollectorOptions<any> = {},
-    ): Promise<InteractionCollector<MessageComponentInteraction> | null> {
+    ): InteractionCollector<MessageComponentInteraction> | null {
         if (this.parent instanceof ChatInputCommandInteraction) return null;
         return this.parent.createMessageComponentCollector(options as any);
     }
@@ -641,11 +645,11 @@ export class Context {
      * @message Creates a reaction collector
      * @param {ReactionCollectorOptions} [options={}] Options to send to the
      * collector
-     * @returns {Promise<ReactionCollector<MessageReaction>|null>}
+     * @returns {ReactionCollector<MessageReaction>|null}
      */
-    public async createReactionCollector(
+    public createReactionCollector(
         options: ReactionCollectorOptions = {},
-    ): Promise<ReactionCollector | null> {
+    ): ReactionCollector | null {
         if (this.parent instanceof ChatInputCommandInteraction) return null;
         return this.parent.createReactionCollector(options);
     }
@@ -923,8 +927,8 @@ export class Context {
             ? Reflect.get(this.parent, 'isRepliable')()
             : this.channel instanceof GuildChannel &&
               this.guild instanceof Guild &&
-              this.guild.me instanceof GuildMember
-            ? this.channel?.permissionsFor(this.guild.me)?.has('SendMessages')
+              this.guild.members.me instanceof GuildMember
+            ? this.channel?.permissionsFor(this.guild.members.me)?.has('SendMessages')
             : true;
     }
 
@@ -1030,12 +1034,17 @@ export class Context {
     }
 
     /**
-     * @interaction Shows a modal component
+     * @interaction Shows a modal component and returns undefined
      * @message Always returns null
-     * @param {ModalData|ModalBuilder} modal The modal to show
+     * @param {APIModal|ModalData|Modal} modal The modal to show
      * @returns {Promise<null|undefined>}
      */
-    public async showModal(modal: ModalData | ModalBuilder): Promise<null | undefined> {
+    public async showModal(
+        modal:
+            | APIModalInteractionResponseCallbackData
+            | ModalComponentData
+            | JSONEncodable<APIModalInteractionResponseCallbackData>,
+    ): Promise<null | undefined> {
         if (this.parent instanceof Message) return null;
         await this.parent.showModal(modal);
         return undefined;

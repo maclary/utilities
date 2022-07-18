@@ -4,38 +4,42 @@ on: workflow_dispatch
 
 jobs:
   npm:
-    name: npm
+    name: Publish Development
     strategy:
       fail-fast: false
       matrix:
         include:
-          - package: '@maclary/context'
+          - package: '@maclary/content'
             folder: 'context'
+
     runs-on: ubuntu-latest
     if: github.repository_owner == 'maclary'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install node.js v16
+      - name: Install Node.js v16
         uses: actions/setup-node@v2
         with:
           node-version: 16
+          registry-url: https://registry.npmjs.org/
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
 
       - name: Check previous released version
         id: pre-release
         run: |
-          if [[ $(npm view ${{ matrix.package }}@dev version | grep -e "$(jq --raw-output '.version' packages/${{ matrix.folder }}/package.json)\..*-$(git rev-parse --short HEAD)") ]]; \
+          if [[ $(npm view {{ matrix.package }}@dev version | grep -e "$(jq --raw-output '.version' packages/${{ matrix.folder }}/package.json)\..*-$(git rev-parse --short HEAD)") ]]; \
           then echo '::set-output name=release::false'; \
           else echo '::set-output name=release::true'; fi
-
+      
       - name: Install dependencies
         if: steps.pre-release.outputs.release == 'true'
-        run: npm ci
+        run: yarn --immutable
 
       - name: Compile TypeScript
         if: steps.pre-release.outputs.release == 'true'
-        run: npm run clean && npm run build
+        run: yarn clean && yarn build
 
       - name: Deprecate old versions
         if: steps.pre-release.outputs.release == 'true'
@@ -46,11 +50,8 @@ jobs:
       - name: Publish development
         if: steps.pre-release.outputs.release == 'true'
         run: |
-          npm version $(jq --raw-output '.version' packages/${{ matrix.folder }}/package.json).$(date +%s)-$(git rev-parse --short HEAD) --workspace=${{ matrix.package }}
-          npm publish --workspace=${{ matrix.package }} --tag=dev || true
-        env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+          yarn workspace ${{ matrix.package }} version $(jq --raw-output '.version' packages/${{ matrix.folder }}/package.json).$(date +%s)-$(git rev-parse --short HEAD) \
+          yarn workspace ${{ matrix.package }} npm publush --tag dev || true
 
-      # Workaround to avoid Post Use step failures. See: https://github.com/actions/setup-node/issues/317
       - run: mkdir -p /home/runner/.cache/yarn/v6
         continue-on-error: true

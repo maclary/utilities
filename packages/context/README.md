@@ -22,7 +22,7 @@
 
 # Description
 
-Context is a library that can convert Discord.js Messages or ChatInputs into a single, common, object that can be used to easily create slash and message commands without having to write code for each separately. This library requires the development version of Discord.js (`discord.js@dev`).
+Context is a library that can convert Discord.js Messages or ChatInputs into a single, common, object that can be used to easily create slash and message commands without having to write code for each separately. Requires Discord.js >=14.0.0
 
 @maclary/context is still in its early stages, please report any bugs or suggestions you may have.
 
